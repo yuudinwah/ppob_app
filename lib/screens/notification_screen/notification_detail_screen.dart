@@ -1,20 +1,21 @@
 import 'package:flutter/material.dart';
 
 class NotificationDetailScreen extends StatefulWidget {
-  const NotificationDetailScreen({super.key});
+  final Map<String, dynamic> notification;
+  const NotificationDetailScreen({super.key, required this.notification});
 
   @override
   State<NotificationDetailScreen> createState() =>
       _NotificationDetailScreenState();
 }
 
-class _NotificationDetailScreenState
-    extends State<NotificationDetailScreen> {
+class _NotificationDetailScreenState extends State<NotificationDetailScreen> {
+  Map<String, dynamic> get notification => widget.notification;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Promosi'),
+        title: Text(notification['type']),
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -35,9 +36,9 @@ class _NotificationDetailScreenState
                 color: Colors.blue,
                 borderRadius: BorderRadius.circular(10),
               ),
-              child: const Text(
-                "Promo",
-                style: TextStyle(
+              child: Text(
+                notification['category'],
+                style: const TextStyle(
                   color: Colors.white,
                   fontSize: 12,
                 ),
@@ -50,9 +51,9 @@ class _NotificationDetailScreenState
               padding: const EdgeInsets.symmetric(
                 horizontal: 16,
               ),
-              child: const Text(
-                'Promo, incar sekarang juga!',
-                style: TextStyle(
+              child: Text(
+                notification['title'],
+                style: const TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 16,
                 ),
@@ -65,8 +66,9 @@ class _NotificationDetailScreenState
               margin: const EdgeInsets.symmetric(
                 horizontal: 16,
               ),
-              child: const Text(
-                  'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'),
+              child: Text(
+                notification['body'] ?? "",
+              ),
             ),
           ],
         ),

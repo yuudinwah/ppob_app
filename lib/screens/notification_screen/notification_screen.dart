@@ -58,8 +58,9 @@ class _NotificationScreenState extends State<NotificationScreen> {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (_) =>
-                                          const NotificationDetailScreen(),
+                                      builder: (_) => NotificationDetailScreen(
+                                        notification: notification,
+                                      ),
                                     ),
                                   );
                                 },
@@ -175,7 +176,9 @@ class _NotificationScreenState extends State<NotificationScreen> {
                                                         Container(
                                                           height: 40,
                                                           width: 40,
-                                                          padding: const EdgeInsets.all(4),
+                                                          padding:
+                                                              const EdgeInsets
+                                                                  .all(4),
                                                           child: Image.asset(
                                                               notification[
                                                                           'detail']
@@ -191,15 +194,8 @@ class _NotificationScreenState extends State<NotificationScreen> {
                                                             children: [
                                                               SizedBox(
                                                                 width: width,
-                                                                child: Text('${notification[
-                                                                            'detail']
-                                                                        [
-                                                                        'product']
-                                                                    ['operator']} ${notification[
-                                                                            'detail']
-                                                                        [
-                                                                        'product']
-                                                                    ['name']}'),
+                                                                child: Text(
+                                                                    '${notification['detail']['product']['operator']} ${notification['detail']['product']['name']}'),
                                                               ),
                                                             ],
                                                           ),
@@ -382,8 +378,9 @@ class _NotificationScreenState extends State<NotificationScreen> {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (_) =>
-                                          const NotificationDetailScreen(),
+                                      builder: (_) => NotificationDetailScreen(
+                                        notification: notification,
+                                      ),
                                     ),
                                   );
                                 },
