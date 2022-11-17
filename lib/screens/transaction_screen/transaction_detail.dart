@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:ppob_app/extensions/int_extension.dart';
 
 class TransactionDetail extends StatefulWidget {
-  const TransactionDetail({super.key});
+  final Map<String, dynamic> transaction;
+  const TransactionDetail({super.key, required this.transaction});
 
   @override
   State<TransactionDetail> createState() => _TransactionDetailState();
 }
 
 class _TransactionDetailState extends State<TransactionDetail> {
+  Map<String, dynamic> get transaction => widget.transaction;
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
@@ -48,9 +51,9 @@ class _TransactionDetailState extends State<TransactionDetail> {
                           height: 50,
                           width: 50,
                           decoration: BoxDecoration(
-                            color: Colors.grey[400],
                             borderRadius: BorderRadius.circular(40),
                           ),
+                          child: Image.asset(transaction['product']['icon']),
                         ),
                         const SizedBox(
                           width: 16,
@@ -61,9 +64,9 @@ class _TransactionDetailState extends State<TransactionDetail> {
                             children: [
                               SizedBox(
                                 width: width,
-                                child: const Text(
-                                  'Produk 1',
-                                  style: TextStyle(
+                                child: Text(
+                                  transaction['product']['operator'],
+                                  style: const TextStyle(
                                     fontSize: 14,
                                     fontWeight: FontWeight.bold,
                                   ),
@@ -71,9 +74,9 @@ class _TransactionDetailState extends State<TransactionDetail> {
                               ),
                               SizedBox(
                                 width: width,
-                                child: const Text(
-                                  'Detail produk 1',
-                                  style: TextStyle(
+                                child: Text(
+                                  transaction['product']['name'],
+                                  style: const TextStyle(
                                     fontSize: 12,
                                     fontWeight: FontWeight.bold,
                                   ),
@@ -101,7 +104,7 @@ class _TransactionDetailState extends State<TransactionDetail> {
                             ),
                           ),
                         ),
-                       const  SizedBox(
+                        const SizedBox(
                           height: 8,
                         ),
                       ],
@@ -119,8 +122,8 @@ class _TransactionDetailState extends State<TransactionDetail> {
                     ),
                     child: Row(
                       children: [
-                       const  Expanded(
-                          child: Text('123567XXXX'),
+                        Expanded(
+                          child: Text(transaction['token']),
                         ),
                         IconButton(
                           onPressed: () {},
@@ -154,10 +157,10 @@ class _TransactionDetailState extends State<TransactionDetail> {
                           width: width,
                           child: Row(
                             children: [
-                              const Flexible(
+                              Flexible(
                                 child: Text(
-                                  '123561723',
-                                  style: TextStyle(
+                                  transaction['customerID'],
+                                  style: const TextStyle(
                                     fontSize: 14,
                                     fontWeight: FontWeight.w600,
                                   ),
@@ -200,10 +203,10 @@ class _TransactionDetailState extends State<TransactionDetail> {
                           width: width,
                           child: Row(
                             children: [
-                              const Flexible(
+                              Flexible(
                                 child: Text(
-                                  '2022110610032',
-                                  style: TextStyle(
+                                  transaction['id'],
+                                  style: const TextStyle(
                                     fontSize: 14,
                                     fontWeight: FontWeight.w600,
                                   ),
@@ -283,10 +286,10 @@ class _TransactionDetailState extends State<TransactionDetail> {
                           const Expanded(
                             child: SizedBox(),
                           ),
-                          const SizedBox(
+                          SizedBox(
                             child: Text(
-                              'Rp 3.200',
-                              style: TextStyle(
+                              'Rp ${int.parse('${transaction['price']}').toCurrency()}',
+                              style: const TextStyle(
                                 // color: Colors.grey[500],
                                 fontSize: 12,
                                 fontWeight: FontWeight.bold,
@@ -312,10 +315,10 @@ class _TransactionDetailState extends State<TransactionDetail> {
                           const Expanded(
                             child: SizedBox(),
                           ),
-                          const SizedBox(
+                          SizedBox(
                             child: Text(
-                              'Rp 200',
-                              style: TextStyle(
+                              'Rp ${int.parse('${transaction['disclaimer']}').toCurrency()}',
+                              style: const TextStyle(
                                 // color: Colors.grey[500],
                                 fontSize: 12,
                                 fontWeight: FontWeight.bold,
@@ -342,10 +345,10 @@ class _TransactionDetailState extends State<TransactionDetail> {
                           const Expanded(
                             child: SizedBox(),
                           ),
-                          const SizedBox(
+                          SizedBox(
                             child: Text(
-                              'Rp 3.400',
-                              style: TextStyle(
+                              'Rp ${int.parse('${transaction['subTotal']}').toCurrency()}',
+                              style: const TextStyle(
                                 // color: Colors.grey[500],
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,

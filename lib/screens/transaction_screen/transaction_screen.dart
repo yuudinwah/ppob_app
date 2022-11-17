@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:ppob_app/screen/transaction_detail.dart';
+import 'package:ppob_app/extensions/datetime_extension.dart';
+import 'package:ppob_app/resources/databases/transaction_database.dart';
+import 'package:ppob_app/screens/transaction_screen/transaction_detail.dart';
 
 class TransactionScreen extends StatefulWidget {
   const TransactionScreen({super.key});
@@ -10,140 +12,9 @@ class TransactionScreen extends StatefulWidget {
 }
 
 class _TransactionScreenState extends State<TransactionScreen> {
-  List<Map<String, dynamic>> transactions = [
-    {
-      "date": DateTime(2022, 11, 03),
-      "product": {
-        "name": "Produk 1",
-        "price": 32200,
-      },
-      "status": "Success"
-    },
-    {
-      "date": DateTime(2022, 11, 02),
-      "product": {
-        "name": "Produk 1",
-        "price": 32200,
-      },
-      "status": "Failed"
-    },
-    {
-      "date": DateTime(2022, 11, 02),
-      "product": {
-        "name": "Produk 2",
-        "price": 35200,
-      },
-      "status": "Success"
-    },
-    {
-      "date": DateTime(2022, 10, 25),
-      "product": {
-        "name": "Produk 1",
-        "price": 32200,
-      },
-      "status": "Success"
-    },
-    //
-    {
-      "date": DateTime(2022, 10, 25),
-      "product": {
-        "name": "Produk 1",
-        "price": 32200,
-      },
-      "status": "Failed"
-    },
-    {
-      "date": DateTime(2022, 10, 24),
-      "product": {
-        "name": "Produk 2",
-        "price": 35200,
-      },
-      "status": "Success"
-    },
-    {
-      "date": DateTime(2022, 10, 24),
-      "product": {
-        "name": "Produk 1",
-        "price": 32200,
-      },
-      "status": "Success"
-    },
-    {
-      "date": DateTime(2022, 10, 23),
-      "product": {
-        "name": "Produk 1",
-        "price": 32200,
-      },
-      "status": "Failed"
-    },
-    {
-      "date": DateTime(2022, 10, 22),
-      "product": {
-        "name": "Produk 2",
-        "price": 35200,
-      },
-      "status": "Success"
-    },
-    {
-      "date": DateTime(2022, 10, 21),
-      "product": {
-        "name": "Produk 1",
-        "price": 32200,
-      },
-      "status": "Success"
-    },
-    {
-      "date": DateTime(2022, 10, 20),
-      "product": {
-        "name": "Produk 1",
-        "price": 32200,
-      },
-      "status": "Failed"
-    },
-    {
-      "date": DateTime(2022, 10, 19),
-      "product": {
-        "name": "Produk 2",
-        "price": 35200,
-      },
-      "status": "Success"
-    },
-    {
-      "date": DateTime(2022, 10, 18),
-      "product": {
-        "name": "Produk 1",
-        "price": 32200,
-      },
-      "status": "Success"
-    },
-    {
-      "date": DateTime(2022, 10, 18),
-      "product": {
-        "name": "Produk 1",
-        "price": 32200,
-      },
-      "status": "Failed"
-    },
-    {
-      "date": DateTime(2022, 10, 18),
-      "product": {
-        "name": "Produk 2",
-        "price": 35200,
-      },
-      "status": "Success"
-    },
-    {
-      "date": DateTime(2022, 10, 17),
-      "product": {
-        "name": "Produk 1",
-        "price": 32200,
-      },
-      "status": "Success"
-    }
-  ];
   DateTimeRange date = DateTimeRange(
-    start: DateTime(DateTime.now().year, DateTime.now().month, 1, 0, 0, 1),
-    end: DateTime(DateTime.now().year, DateTime.now().month + 1, 0, 23, 59, 59),
+    start: DateTime.now().add(const Duration(days: -6)),
+    end: DateTime.now(),
   );
 
   @override
@@ -209,7 +80,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
                         });
                       },
                       child: Text(
-                        dateFormat(date.start, format: 'dd MMM yyyy') ?? '',
+                        date.start.dateFormat(format: 'dd MMM yyyy'),
                         style: const TextStyle(
                           color: Colors.blue,
                           fontSize: 12,
@@ -255,7 +126,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
                         });
                       },
                       child: Text(
-                        dateFormat(date.end, format: 'dd MMM yyyy') ?? '',
+                        date.end.dateFormat(format: 'dd MMM yyyy'),
                         style: const TextStyle(
                           color: Colors.blue,
                           fontSize: 12,
@@ -268,12 +139,13 @@ class _TransactionScreenState extends State<TransactionScreen> {
             ),
             Builder(
               builder: (_) {
-                List<Map<String, dynamic>> trxs = transactions;
+                List<Map<String, dynamic>> trxs = transactionDummies;
                 trxs = trxs
                     .where((element) =>
-                        date.start.isBefore(element['date']) &&
-                        date.end.isAfter(element['date']))
+                        date.start.isBefore(element['createdAt']) &&
+                        date.end.isAfter(element['createdAt']))
                     .toList();
+                trxs.sort((a, b) => b['createdAt'].compareTo(a['createdAt']));
                 return Container(
                   color: Colors.white,
                   child: Column(
@@ -284,7 +156,9 @@ class _TransactionScreenState extends State<TransactionScreen> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => const TransactionDetail(),
+                              builder: (context) => TransactionDetail(
+                                transaction: trx,
+                              ),
                             ),
                           );
                         },
@@ -307,16 +181,12 @@ class _TransactionScreenState extends State<TransactionScreen> {
                           child: Row(
                             children: [
                               Container(
-                                height: 50,
-                                width: 50,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(50),
-                                  color: Colors.grey[400]!,
-                                ),
-                                child: const Icon(
-                                  Icons.widgets,
-                                ),
-                              ),
+                                  height: 50,
+                                  width: 50,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(50),
+                                  ),
+                                  child: Image.asset(trx['product']['icon'])),
                               const SizedBox(
                                 width: 8,
                               ),
@@ -327,10 +197,10 @@ class _TransactionScreenState extends State<TransactionScreen> {
                                       SizedBox(
                                         width: width,
                                         child: Text(
-                                          dateFormat(trx['date'],
+                                          (trx['createdAt'] as DateTime)
+                                              .dateFormat(
                                                   format:
-                                                      'dd MMMM yyyy . HH:mm') ??
-                                              '',
+                                                      'dd MMMM yyyy . HH:mm'),
                                           style: const TextStyle(
                                             fontSize: 10,
                                           ),
@@ -395,18 +265,6 @@ class _TransactionScreenState extends State<TransactionScreen> {
       ),
     );
   }
-}
-
-String? dateFormat(dynamic tanggal,
-    {String format = 'dd MMMM yyyy', String locale = 'id'}) {
-  String? hasil;
-  if (tanggal is DateTime) {
-    hasil = DateFormat(format, locale).format(tanggal).toString();
-  } else if (tanggal is String) {
-    hasil =
-        DateFormat(format, locale).format(DateTime.parse(tanggal)).toString();
-  }
-  return hasil;
 }
 
 Future<DateTime?> selectDate(

@@ -1,5 +1,9 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:ppob_app/extensions/int_extension.dart';
+import 'package:ppob_app/resources/databases/account_database.dart';
+import 'package:ppob_app/resources/databases/advertisement_database.dart';
+import 'package:ppob_app/resources/databases/feature_database.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -17,7 +21,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
-        title: const Text('App by void'),
+        title: const Text('void app'),
         actions: [
           IconButton(
             onPressed: () {},
@@ -90,9 +94,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                           padding: const EdgeInsets.symmetric(
                                             horizontal: 16,
                                           ),
-                                          child: const Text(
-                                            'Rp 200.000',
-                                            style: TextStyle(
+                                          child: Text(
+                                            'Rp ${int.parse('${accountDummy['balance']}').toCurrency()}',
+                                            style: const TextStyle(
                                               fontWeight: FontWeight.bold,
                                               fontSize: 16,
                                             ),
@@ -179,7 +183,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 padding:
                                     const EdgeInsets.symmetric(horizontal: 16),
                                 child: const Text(
-                                  'Product',
+                                  'Pembayaran',
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                     fontSize: 12,
@@ -201,10 +205,17 @@ class _HomeScreenState extends State<HomeScreen> {
                                         WrapCrossAlignment.center,
                                     spacing: 8,
                                     runSpacing: 8,
-                                    children: List.generate(8, (index) {
+                                    children: List.generate(
+                                        featureDummies.length, (index) {
+                                      Map<String, dynamic> feature =
+                                          featureDummies[index];
                                       return Container(
                                         height: width / 4 - 20,
                                         width: width / 4 - 20,
+                                        constraints: const BoxConstraints(
+                                          maxHeight: 80,
+                                          maxWidth: 80,
+                                        ),
                                         decoration: BoxDecoration(
                                           color: Colors.white,
                                           borderRadius:
@@ -215,9 +226,13 @@ class _HomeScreenState extends State<HomeScreen> {
                                             Container(
                                               height: (width / 4 - 20) / 2,
                                               width: (width / 4 - 20) / 2,
+                                              constraints: const BoxConstraints(
+                                                maxHeight: 60,
+                                                maxWidth: 60,
+                                              ),
                                               alignment: Alignment.center,
-                                              child: const Icon(
-                                                Icons.widgets,
+                                              child: Icon(
+                                                feature['icon'],
                                                 size: 28,
                                                 color: Colors.blue,
                                               ),
@@ -231,9 +246,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                                 height: 40,
                                                 alignment: Alignment.topCenter,
                                                 child: Text(
-                                                  'Product ${index + 1}',
+                                                  '${feature['name']}',
                                                   style: const TextStyle(
-                                                    fontSize: 12,
+                                                    fontSize: 10,
+                                                    fontWeight: FontWeight.bold,
                                                   ),
                                                 ),
                                               ),
@@ -257,167 +273,131 @@ class _HomeScreenState extends State<HomeScreen> {
             const SizedBox(
               height: 16,
             ),
-            Container(
-              height: 100,
-              width: width,
-              margin: const EdgeInsets.symmetric(
-                horizontal: 16,
-              ),
-              padding: const EdgeInsets.symmetric(
-                horizontal: 16,
-                vertical: 16,
-              ),
-              decoration: BoxDecoration(
-                color: Colors.blue,
-                borderRadius: BorderRadius.circular(10),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.25),
-                    blurRadius: 2.0,
-                    offset: const Offset(0, 1),
+            Column(
+              children: [
+                SizedBox(
+                  width: width,
+                  child: CarouselSlider(
+                    options: CarouselOptions(
+                      aspectRatio: 1171 / 601,
+                      viewportFraction: 1,
+                      onPageChanged: (index, reason) {
+                        slideIndex = index;
+                        setState(() {});
+                      },
+                      autoPlayInterval: const Duration(
+                        seconds: 15,
+                      ),
+                      autoPlay: true,
+                    ),
+                    items: List.generate(advertisementDummies.length, (index) {
+                      Map<String, dynamic> advertisement =
+                          advertisementDummies[index];
+                      return AspectRatio(
+                        aspectRatio: 1171 / 601,
+                        child: Container(
+                          margin: const EdgeInsets.symmetric(
+                            horizontal: 16,
+                            vertical: 4,
+                          ),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(10),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.25),
+                                blurRadius: 2.0,
+                                offset: const Offset(0, 1),
+                              ),
+                            ],
+                          ),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(10),
+                            child: Image.asset(
+                              advertisement['cover'],
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        ),
+                      );
+                    }),
                   ),
-                ],
-              ),
-              child: const Text(
-                'Ini Banner',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
                 ),
-              ),
+                Container(
+                  height: 20,
+                  width: width,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                  ),
+                  child: Row(
+                    children: [
+                      const Expanded(
+                        child: SizedBox(
+                          child: Text(
+                            'Lihat Semua',
+                            style: TextStyle(
+                              color: Colors.blue,
+                              fontSize: 12,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ),
+                      Row(
+                        children:
+                            List.generate(advertisementDummies.length, (index) {
+                          bool currentSlide = false;
+                          if (index == slideIndex) currentSlide = true;
+                          return Container(
+                            margin: const EdgeInsets.symmetric(
+                              horizontal: 1,
+                            ),
+                            height: currentSlide ? 10 : 6,
+                            width: currentSlide ? 10 : 6,
+                            color:
+                                currentSlide ? Colors.blue : Colors.grey[400],
+                          );
+                        }),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ),
             const SizedBox(
               height: 16,
             ),
-            SizedBox(
-              width: width,
-              child: CarouselSlider(
-                options: CarouselOptions(
-                  aspectRatio: 1171 / 601,
-                  viewportFraction: 1,
-                  onPageChanged: (index, reason) {
-                    slideIndex = index;
-                    setState(() {});
-                  },
-                  autoPlayInterval: const Duration(
-                    seconds: 15,
-                  ),
-                  autoPlay: true,
-                ),
-                items: List.generate(8, (index) {
-                  return AspectRatio(
-                    aspectRatio: 1171 / 601,
-                    child: Container(
-                      margin: const EdgeInsets.symmetric(
-                        horizontal: 16,
-                        vertical: 4,
-                      ),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(10),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.25),
-                            blurRadius: 2.0,
-                            offset: const Offset(0, 1),
-                          ),
-                        ],
-                      ),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(10),
-                        child: Stack(
-                          children: [
-                            Positioned(
-                              top: 50,
-                              right: -(width / 2) * 8 / 100,
-                              child: Container(
-                                height: width * 75 / 100,
-                                width: width * 75 / 100,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(width),
-                                  border: Border.all(
-                                    width: 10,
-                                    color: Colors.red,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            Positioned(
-                              top: 50 + (index * 2),
-                              right: 0,
-                              child: Container(
-                                height: width / 2,
-                                width: width / 2,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(width),
-                                  color: Colors.blue,
-                                ),
-                              ),
-                            ),
-                            AspectRatio(
-                              aspectRatio: 1171 / 601,
-                              child: Container(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 16,
-                                  vertical: 8,
-                                ),
-                                width: width,
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      'advertisement $index',
-                                      style: const TextStyle(
-                                        color: Colors.black,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  );
-                }),
-              ),
-            ),
             Container(
-              height: 20,
-              width: width,
-              padding: const EdgeInsets.symmetric(
+              margin: const EdgeInsets.symmetric(
                 horizontal: 16,
               ),
-              child: Row(
-                children: [
-                  const Expanded(
-                    child: SizedBox(
-                      child: Text(
-                        'Lihat Semua',
-                        style: TextStyle(
-                          color: Colors.blue,
-                          fontSize: 12,
-                          fontWeight: FontWeight.bold,
+              width: width,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(10),
+                child: AspectRatio(
+                  aspectRatio: 1171 / 280,
+                  child: Container(
+                    width: width,
+                    decoration: BoxDecoration(
+                      color: Colors.blue,
+                      borderRadius: BorderRadius.circular(10),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.25),
+                          blurRadius: 2.0,
+                          offset: const Offset(0, 1),
                         ),
-                      ),
+                      ],
+                    ),
+                    child: Image.asset(
+                      'assets/images/banner/banner.png',
+                      fit: BoxFit.cover,
                     ),
                   ),
-                  Row(
-                    children: List.generate(8, (index) {
-                      bool currentSlide = false;
-                      if (index == slideIndex) currentSlide = true;
-                      return Container(
-                        margin: const EdgeInsets.symmetric(
-                          horizontal: 1,
-                        ),
-                        height: currentSlide ? 10 : 6,
-                        width: currentSlide ? 10 : 6,
-                        color: currentSlide ? Colors.blue : Colors.grey[400],
-                      );
-                    }),
-                  ),
-                ],
+                ),
               ),
             ),
             const SizedBox(

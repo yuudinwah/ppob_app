@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:intl/date_symbol_data_local.dart';
-import 'package:ppob_app/screen/account_screen.dart';
-import 'package:ppob_app/screen/home_screen.dart';
-import 'package:ppob_app/screen/notification_screen.dart';
-import 'package:ppob_app/screen/product_screen.dart';
-import 'package:ppob_app/screen/transaction_screen.dart';
+import 'package:ppob_app/screens/account_screen/account_screen.dart';
+import 'package:ppob_app/screens/home_screen/home_screen.dart';
+import 'package:ppob_app/screens/notification_screen/notification_screen.dart';
+import 'package:ppob_app/screens/product_screen/product_screen.dart';
+import 'package:ppob_app/screens/transaction_screen/transaction_screen.dart';
 
 void main() async {
   await initializeDateFormatting();
@@ -17,7 +17,8 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Latihan Flutter',
+      debugShowCheckedModeBanner: false,
+      title: 'void',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),

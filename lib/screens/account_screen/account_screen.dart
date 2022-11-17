@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ppob_app/resources/databases/account_database.dart';
 
 class AccountScreen extends StatefulWidget {
   const AccountScreen({super.key});
@@ -62,9 +63,9 @@ class _AccountScreenState extends State<AccountScreen> {
                               borderRadius: BorderRadius.circular(10),
                             ),
                             alignment: Alignment.center,
-                            child: const Text(
-                              'W',
-                              style: TextStyle(
+                            child: Text(
+                              (accountDummy['name'] ?? '-')[0],
+                              style: const TextStyle(
                                 fontSize: 24,
                                 color: Colors.white,
                               ),
@@ -79,9 +80,9 @@ class _AccountScreenState extends State<AccountScreen> {
                               children: [
                                 SizedBox(
                                   width: width,
-                                  child: const Text(
-                                    'Wahyu Wahyudin',
-                                    style: TextStyle(
+                                  child: Text(
+                                    accountDummy['name'],
+                                    style: const TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 16,
                                     ),
@@ -92,9 +93,9 @@ class _AccountScreenState extends State<AccountScreen> {
                                 ),
                                 SizedBox(
                                   width: width,
-                                  child: const Text(
-                                    '20552011209',
-                                    style: TextStyle(
+                                  child: Text(
+                                    accountDummy['id'],
+                                    style: const TextStyle(
                                       fontSize: 12,
                                     ),
                                   ),
