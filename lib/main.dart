@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:intl/date_symbol_data_local.dart';
+import 'package:ppob_app/commons/providers/app_provider.dart';
+import 'package:ppob_app/commons/providers/product_provider.dart';
 import 'package:ppob_app/screens/account_screen/account_screen.dart';
 import 'package:ppob_app/screens/home_screen/home_screen.dart';
 import 'package:ppob_app/screens/notification_screen/notification_screen.dart';
 import 'package:ppob_app/screens/product_screen/product_screen.dart';
 import 'package:ppob_app/screens/transaction_screen/transaction_screen.dart';
+import 'package:provider/provider.dart';
 
 void main() async {
   await initializeDateFormatting();
@@ -16,13 +19,30 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'void',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: const MyHomePage(),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider<AppProvider>(
+          create: (_) => AppProvider(),
+        ),
+        ChangeNotifierProvider<ProductProvider>(
+          create: (_) => ProductProvider(),
+        ),
+      ],
+      builder: (_, __) {
+        return Consumer<AppProvider>(
+          builder: (_, app, ___) {
+            return MaterialApp(
+              debugShowCheckedModeBanner: false,
+              title: 'void',
+              theme: ThemeData(
+                primarySwatch: Colors.blue,
+              ),
+              home: const MyHomePage(),
+              routes: const {},
+            );
+          },
+        );
+      },
     );
   }
 }

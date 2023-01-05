@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:ppob_app/extensions/datetime_extension.dart';
 import 'package:ppob_app/resources/databases/transaction_database.dart';
 import 'package:ppob_app/screens/transaction_screen/transaction_detail.dart';
