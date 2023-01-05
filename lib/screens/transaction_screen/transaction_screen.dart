@@ -145,6 +145,33 @@ class _TransactionScreenState extends State<TransactionScreen> {
                         date.end.isAfter(element['createdAt']))
                     .toList();
                 trxs.sort((a, b) => b['createdAt'].compareTo(a['createdAt']));
+                if (trxs.isEmpty) {
+                  return Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 32,
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: const [
+                        SizedBox(
+                          child: Text(
+                            'Ooppss',
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          child: Text(
+                            'Tidak ada transaksi',
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                }
                 return Container(
                   color: Colors.white,
                   child: Column(
